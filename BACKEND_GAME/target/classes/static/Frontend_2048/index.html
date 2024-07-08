@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048 Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #faf8ef;
+            margin: 0;
+        }
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            background-color: #bbada0;
+            padding: 12px;
+            border-radius: 10px;
+        }
+        .tile {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            background-color: rgba(238, 228, 218, 0.35); /* Light background for empty tiles */
+        }
+        .tile-2 { background-color: #98d60e; }
+        .tile-4 { background-color: #776e65; }
+        .tile-8 { background-color: #f2b179; }
+        .tile-16 { background-color: #f59563; }
+        .tile-32 { background-color: #f67c5f; }
+        .tile-64 { background-color: #f65e3b; }
+        .tile-128 { background-color: #edcf72; }
+        .tile-256 { background-color: #edcc61; }
+        .tile-512 { background-color: #edc850; }
+        .tile-1024 { background-color: #edc53f; }
+        .tile-2048 { background-color: #edc22e; }
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+        .win-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(0, 230, 0);
+            padding: 20px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container" id="game-container">
+    <!-- Tiles will be added here by JavaScript -->
+</div>
+<!--<div class="game-over" id="game-over-message">-->
+<!--    Game Over!-->
+<!--</div>-->
+<!--<div class="win-message" id="win-message">-->
+<!--    You Win!-->
+<!--</div>-->
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', (event) => {-->
+<!--        const gameContainer = document.getElementById('game-container');-->
+<!--        const gameOverMessage = document.getElementById('game-over-message');-->
+<!--        const winMessage = document.getElementById('win-message');-->
+<!--        let gameActive = true;  // flag to indicate whether the game is active-->
+
+<!--        function updateBoard(board) {-->
+<!--            gameContainer.innerHTML = '';-->
+<!--            let gameOver = true;-->
+<!--            let win = false;-->
+<!--            for (let row = 0; row < board.length; row++) {-->
+<!--                for (let col = 0; col < board[row].length; col++) {-->
+<!--                    const tileValue = board[row][col];-->
+<!--                    const tile = document.createElement('div');-->
+<!--                    tile.classList.add('tile');-->
+<!--                    if (tileValue !== 0) {-->
+<!--                        tile.classList.add(`tile-${tileValue}`);-->
+<!--                        tile.textContent = tileValue;-->
+<!--                    }-->
+<!--                    gameContainer.appendChild(tile);-->
+
+<!--                    if (tileValue === 2048) {-->
+<!--                        win = true;-->
+<!--                    }-->
+<!--                    if (tileValue === 0 || (col < board[row].length - 1 && board[row][col] === board[row][col + 1]) || (row < board.length - 1 && board[row][col] === board[row + 1][col])) {-->
+<!--                        gameOver = false;-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+
+<!--            if (win) {-->
+<!--                winMessage.style.display = 'block';-->
+<!--                gameActive = false;-->
+<!--            } else {-->
+<!--                winMessage.style.display = 'none';-->
+<!--            }-->
+
+<!--            if (gameOver) {-->
+<!--                gameOverMessage.style.display = 'block';-->
+<!--                gameActive = false;-->
+<!--                return;-->
+<!--            } else {-->
+<!--                gameOverMessage.style.display = 'none';-->
+<!--            }-->
+<!--        }-->
+
+<!--        function fetchBoard() {-->
+<!--            if (!gameActive) return;-->
+<!--            fetch('/api/board')-->
+<!--                .then(response => response.json())-->
+<!--                .then(board => updateBoard(board))-->
+<!--                .catch(error => console.error('Error fetching the board:', error));-->
+<!--        }-->
+
+<!--        function sendMove(direction) {-->
+<!--            if (!gameActive) return;-->
+<!--            fetch(`/api/move?direction=${direction}`, { method: 'POST' })-->
+<!--                .then(response => response.json())-->
+<!--                .then(board => updateBoard(board))-->
+<!--                .catch(error => console.error('Error sending the move:', error));-->
+<!--        }-->
+
+<!--        document.addEventListener('keydown', (event) => {-->
+<!--            if (!gameActive) return;-->
+<!--            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {-->
+<!--                let direction;-->
+<!--                switch (event.key) {-->
+<!--                    case 'ArrowUp':-->
+<!--                        direction = 'up';-->
+<!--                        break;-->
+<!--                    case 'ArrowDown':-->
+<!--                        direction = 'down';-->
+<!--                        break;-->
+<!--                    case 'ArrowLeft':-->
+<!--                        direction = 'left';-->
+<!--                        break;-->
+<!--                    case 'ArrowRight':-->
+<!--                        direction = 'right';-->
+<!--                        break;-->
+<!--                }-->
+<!--                sendMove(direction);-->
+<!--            }-->
+<!--        });-->
+
+<!--        fetchBoard();-->
+<!--    });-->
+<!--</script>-->
+</body>
+</html>

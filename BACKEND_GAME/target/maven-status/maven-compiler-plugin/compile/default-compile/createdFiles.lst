@@ -1,0 +1,7 @@
+com\Main.class
+com\example\game\GameController.class
+com\example\game\WebConfig$1.class
+com\example\game\TileInitializer.class
+com\example\game\GameManager.class
+com\example\game\WebConfig.class
+com\example\game\GameApplication.class
